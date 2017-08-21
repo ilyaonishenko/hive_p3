@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello Page</title>
+</head>
+<body>
+<h1>Touch this to start job on yarn:</h1>
+<button type="button" onclick="proceed();">Push me</button>
+<script>
+    function proceed(){
+        var form = document.createElement('form');
+        form.setAttribute('method', 'get');
+        form.setAttribute('action', 'http://localhost:8080/startjob');
+        form.style.display = 'hidden';
+        document.body.appendChild(form)
+        form.submit();
+    }
+</script>
+</body>
+</html>

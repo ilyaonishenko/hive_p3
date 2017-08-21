@@ -17,6 +17,7 @@ lazy val root = (project in file(".")).settings(
     "com.typesafe.slick" %% "slick" % "3.+",
     "com.h2database" % "h2" % "1.+",
     "com.typesafe.akka" %% "akka-actor" % "2.+",
-    "javax.servlet" % "javax.servlet-api" % "3.+" % "provided"
+    "javax.servlet" % "javax.servlet-api" % "3.+" % "provided",
+    "org.scalaj" % "scalaj-http_2.11" % "2.3.0"
   )
 ).settings(jetty(): _*)

@@ -1,56 +1,46 @@
 package org.scalatra.example
 
-import org.json4s.{DefaultFormats, Formats}
-import org.scalatra._
-import org.scalatra.example.db.models.User
-import org.scalatra.example.db.tables.Users
+import java.io.File
+import org.json4s._
+import org.json4s.jackson.Serialization.write
+import org.scalatra.example.model.AppRequest
+import org.scalatra.{FutureSupport, ScalatraServlet}
 import org.scalatra.json.JacksonJsonSupport
 
 import scala.concurrent.ExecutionContext
+import scalaj.http._
 
-/**
- * @author Dmitry Meshkov
- * @since 11.07.2015
- */
+import org.scalatra.example.SerializationHelper._
+
 class UserController extends ScalatraServlet with JacksonJsonSupport with FutureSupport {
 
   protected implicit def executor: ExecutionContext = ExecutionContext.Implicits.global
-
-  protected implicit lazy val jsonFormats: Formats = DefaultFormats
+  implicit val jsonFormats: Formats = DefaultFormats + rename
+  val command = "/usr/local/hadoop/hadoop-2.8.1/bin/hadoop jar /home/ilia/IdeaProjects/hadoop_p2/yarn-task/target/scala-2.12/hadoop_p2-assembly-1.0.jar com.example.ApplicationMaster /user/ilia/jars/hadoop_p2-assembly-1.0.jar 1"
+  val baseUrl = "http://127.0.0.1:8088/ws/v1/cluster/apps/"
 
   before() {
     contentType = formats("json")
   }
 
   get("/") {
-    Users.getAll
+    contentType = "text/html"
+    new File(servletContext.getResource("/WEB-INF/views/home.html").getFile)
   }
 
-  get("/:id") {
-    Users.find(id)
+  get("/startjob"){
+    val urlToReserveNewApp = baseUrl+"new-application"
+    val jValue: HttpResponse[JValue] = Http(urlToReserveNewApp).postData("None".getBytes).header("content-type", "application/json").execute{
+      inputStream =>
+        parse(inputStream)
+    }
+    val smt = jValue.body.extract[Map[String, Any]]
+    val appId = smt("application-id").toString
+    val appRequest = AppRequest(appId, "appFromREST", "default", 3, Map("commands" -> Map("command" -> command)),
+      false, 2, Map("memory" -> "1024", "vCores" -> "1"), "YARN", false)
+    val resJson = write(appRequest)
+    val answer = Http(baseUrl).postData(resJson.getBytes).header("content-type", "application/json").asString
+    answer
   }
-
-  //TODO catch require errors (password/login length)
-  //TODO correct response body (put/post/delete)
-  put("/") {
-    val user = User(None, params("login"),  params("password"))
-    Users.insert(user)
-  }
-
-  post("/:id") {
-    val user = User(id, params("login"),  params("password"))
-    Users.update(user)
-  }
-
-  delete("/:id") {
-    Users.delete(id)
-    "some response"
-  }
-
-  private def id: Int = {
-    //TODO catch errors
-    params("id").toInt
-  }
-
 
 }

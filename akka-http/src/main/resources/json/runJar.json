@@ -1,0 +1,22 @@
+  {
+  "application-id":"application_1404203615263_0001",
+  "application-name":"appFromREST",
+  "queue": "default",
+  "priority": 3,
+  "am-container-spec":
+  {
+    "commands":
+    {
+      "command":"/usr/local/hadoop/hadoop-2.8.1/bin/hadoop jar /home/ilia/IdeaProjects/hadoop_p2/yarn-task/target/scala-2.12/hadoop_p2-assembly-1.0.jar com.example.ApplicationMaster /user/ilia/jars/hadoop_p2-assembly-1.0.jar 1"
+    }
+  },
+  "unmanaged-AM":false,
+  "max-app-attempts":2,
+  "resource":
+  {
+    "memory":1024,
+    "vCores":1
+  },
+  "application-type":"YARN",
+  "keep-containers-across-application-attempts":false
+}

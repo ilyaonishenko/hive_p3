@@ -17,8 +17,8 @@ lazy val yarnTask = (project in file("yarn-task"))
       },
       libraryDependencies ++= Seq(
         "org.scala-lang" % "scala-library" % "2.12.3",
-        "org.apache.hadoop" % "hadoop-common" % "2.8.1",
-        "org.apache.hadoop" % "hadoop-yarn-client" % "2.8.1"
+        "org.apache.hadoop" % "hadoop-common" % "2.8.1" % "provided",
+        "org.apache.hadoop" % "hadoop-yarn-client" % "2.8.1" % "provided"
       )
     )
 
@@ -28,6 +28,9 @@ lazy val webApp = (project in file("akka-http"))
       libraryDependencies ++= Seq(
         "org.scala-lang" % "scala-library" % "2.12.3",
         "com.typesafe.akka" % "akka-http_2.12" % "10.0.9",
-        "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+        "org.json4s" %% "json4s-jackson" % "3.+",
+        "org.scalaj" % "scalaj-http_2.11" % "2.3.0",
+        "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+        "org.apache.hive.hcatalog" % "webhcat-java-client" % "0.12.0"
       )
     )

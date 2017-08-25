@@ -1,4 +1,4 @@
-package com.chariotsolutions
+package com.example
 
 import akka.stream.ActorMaterializer
 import org.scalatest._
